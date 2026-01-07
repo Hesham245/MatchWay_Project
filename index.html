@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MatchWay</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    
+<header>
+    <div class="logo">MatchWay.com</div>
+</header>
+
+<div class="hero">
+    <h1>Find a plan to support your favorite team</h1>
+    <p>Search package ideas that bring together tickets, hotels, merch, and more.</p>
+
+    <div class="search-container">
+        <div class="search-box">
+            <label>Search by Club</label>
+            <input type="text" id="club-input" placeholder="Enter club name">
+        </div>
+
+        <div class="search-box">
+            <label>Search by City</label>
+            <input type="text" id="city-input" placeholder="Enter city name">
+        </div>
+    </div>
+    
+    <div class="date-range-container">
+        <div class="search-box date-box">
+            <label>Start Date</label>
+            <input type="date" id="start-date-input">
+        </div>
+        <div class="search-box date-box">
+            <label>End Date</label>
+            <input type="date" id="end-date-input">
+        </div>
+    </div>
+    
+    <button id="search-button" class="primary-btn">Search</button>
+</div>
+
+<section id="results-section" class="results-section" style="display: none;">
+    <h2>Next Match Information</h2>
+    <div id="results-content"></div>
+</section>
+
+<section class="features-section">
+    <h2>Why MatchWay?</h2>
+
+    <div class="features-grid">
+
+        <div class="feature-card">
+            <img src="images/Soccer Stadium.jpg" alt="Stadium">
+            <div class="text">
+                <h3>Match planning made easy</h3>
+                <p>Quickly see where and when your team plays next.</p>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <img src="images/Hotel.jpg" alt="Hotel">
+            <div class="text">
+                <h3>Simple trip breakdown</h3>
+                <p>Game info, hotel estimate, and budget idea in one view.</p>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <img src="images/Travel Booking.jpg" alt="Planning">
+            <div class="text">
+                <h3>Plan faster</h3>
+                <p>Skip switching between ticket sites, hotel pages, and maps.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+<script src="script.js"></script>
+</body>
+</html>
