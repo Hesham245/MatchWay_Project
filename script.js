@@ -1,6 +1,6 @@
 console.log("MatchWay loaded");
 
-const stadiums = {
+var stadiums = {
     'Arsenal': 'Emirates Stadium',
     'Aston Villa': 'Villa Park',
     'AFC Bournemouth': 'Vitality Stadium',
@@ -35,7 +35,7 @@ const stadiums = {
     'Sunderland': 'Stadium of Light'
 };
 
-const teamCities = {
+var teamCities = {
     'Arsenal': 'London',
     'Aston Villa': 'Birmingham',
     'AFC Bournemouth': 'Bournemouth',
@@ -74,10 +74,10 @@ function getCity(teamName) {
     if (teamCities[teamName]) {
         return teamCities[teamName];
     }
-    const normalized = normalizeTeamName(teamName);
-    for (const [key, value] of Object.entries(teamCities)) {
+    var normalized = normalizeTeamName(teamName);
+    for (var key in teamCities) {
         if (normalizeTeamName(key) === normalized) {
-            return value;
+            return teamCities[key];
         }
     }
     return null;
@@ -87,16 +87,16 @@ function getStadium(teamName) {
     if (stadiums[teamName]) {
         return stadiums[teamName];
     }
-    const normalized = normalizeTeamName(teamName);
-    for (const [key, value] of Object.entries(stadiums)) {
+    var normalized = normalizeTeamName(teamName);
+    for (var key in stadiums) {
         if (normalizeTeamName(key) === normalized) {
-            return value;
+            return stadiums[key];
         }
     }
     return 'Stadium TBA';
 }
 
-const hotels = {
+var hotels = {
     'Arsenal': { city: 'London', hotel: 'ibis London Emirates Stadium', tier: 'Budget' },
     'Aston Villa': { city: 'Birmingham', hotel: 'ibis Birmingham New Street Station', tier: 'Budget' },
     'AFC Bournemouth': { city: 'Bournemouth', hotel: 'ibis Styles Bournemouth', tier: 'Budget' },
@@ -130,22 +130,22 @@ const hotels = {
 };
 
 function parseFixtureDate(dateStr) {
-    const months = {
+    var months = {
         'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
         'Jul': 6, 'Aug': 7, 'Sep': 8, 'Sept': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
     };
-    let cleanDate = dateStr.replace(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),\s*/i, '');
-    const parts = cleanDate.match(/(\w+)\.?\s+(\d+),?\s+(\d+)/);
+    var cleanDate = dateStr.replace(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),\s*/i, '');
+    var parts = cleanDate.match(/(\w+)\.?\s+(\d+),?\s+(\d+)/);
     if (parts) {
-        const month = months[parts[1]];
-        const day = parseInt(parts[2]);
-        const year = parseInt(parts[3]);
+        var month = months[parts[1]];
+        var day = parseInt(parts[2]);
+        var year = parseInt(parts[3]);
         return new Date(year, month, day);
     }
     return null;
 }
 
-const fixtures = [
+var fixtures = [
     { date: 'Wednesday, Jan. 7, 2026', time: '15:00', home: 'AFC Bournemouth', away: 'Tottenham Hotspur' },
     { date: 'Wednesday, Jan. 7, 2026', time: '15:00', home: 'Arsenal', away: 'Liverpool' },
     { date: 'Wednesday, Jan. 7, 2026', time: '15:00', home: 'Brentford', away: 'Sunderland' },
@@ -333,22 +333,22 @@ function normalizeTeamName(name) {
     return name.trim().toLowerCase().replace(/\s+/g, ' ').replace(/&/g, 'and');
 }
 
-async function fetchMatchData(club, city, startDate, endDate) {
-    const clubInput = (club || '').trim();
-    const cityInput = (city || '').trim();
+function fetchMatchData(club, city, startDate, endDate) {
+    var clubInput = (club || '').trim();
+    var cityInput = (city || '').trim();
     
     if (!clubInput && !cityInput) {
         throw new Error('Please enter a club name or city');
     }
     
-    const minDate = new Date(2026, 0, 4);
+    var minDate = new Date(2026, 0, 4);
     minDate.setHours(0, 0, 0, 0);
     
-    let dateFilterStart = minDate;
-    let dateFilterEnd = null;
+    var dateFilterStart = minDate;
+    var dateFilterEnd = null;
     
     if (startDate) {
-        const parsedStart = new Date(startDate);
+        var parsedStart = new Date(startDate);
         parsedStart.setHours(0, 0, 0, 0);
         if (parsedStart >= minDate) {
             dateFilterStart = parsedStart;
@@ -356,34 +356,41 @@ async function fetchMatchData(club, city, startDate, endDate) {
     }
     
     if (endDate) {
-        const parsedEnd = new Date(endDate);
+        var parsedEnd = new Date(endDate);
         parsedEnd.setHours(23, 59, 59, 999);
         dateFilterEnd = parsedEnd;
     }
     
-    let relevantFixtures = [];
+    var relevantFixtures = [];
     
     if (cityInput && !clubInput) {
-        const cityNormalized = cityInput.toLowerCase().trim();
-        relevantFixtures = fixtures
-            .map(fixture => {
-                const fixtureCity = getCity(fixture.home);
-                if (fixtureCity && fixtureCity.toLowerCase() === cityNormalized) {
-                    const matchDate = parseFixtureDate(fixture.date);
-                    return {
-                        ...fixture,
-                        matchDate: matchDate,
-                        city: fixtureCity,
-                        isHome: false,
-                        opponent: null
-                    };
+        var cityNormalized = cityInput.toLowerCase().trim();
+        relevantFixtures = [];
+        for (var i = 0; i < fixtures.length; i++) {
+            var fixture = fixtures[i];
+            var fixtureCity = getCity(fixture.home);
+            if (fixtureCity && fixtureCity.toLowerCase() === cityNormalized) {
+                var matchDate = parseFixtureDate(fixture.date);
+                if (matchDate && matchDate >= dateFilterStart) {
+                    if (!dateFilterEnd || matchDate <= dateFilterEnd) {
+                        var fixtureObj = {
+                            date: fixture.date,
+                            time: fixture.time,
+                            home: fixture.home,
+                            away: fixture.away,
+                            matchDate: matchDate,
+                            city: fixtureCity,
+                            isHome: false,
+                            opponent: null
+                        };
+                        relevantFixtures.push(fixtureObj);
+                    }
                 }
-                return null;
-            })
-            .filter(f => f !== null)
-            .filter(f => f.matchDate && f.matchDate >= dateFilterStart)
-            .filter(f => !dateFilterEnd || f.matchDate <= dateFilterEnd)
-            .sort((a, b) => a.matchDate - b.matchDate);
+            }
+        }
+        relevantFixtures.sort(function(a, b) {
+            return a.matchDate - b.matchDate;
+        });
         
         if (relevantFixtures.length > 1) {
             return {
@@ -394,41 +401,48 @@ async function fetchMatchData(club, city, startDate, endDate) {
         }
         
         if (relevantFixtures.length === 0) {
-            throw new Error(`No matches available in "${cityInput}" for the selected date range.`);
+            throw new Error('No matches available in "' + cityInput + '" for the selected date range.');
         }
     } else {
-        const clubNormalized = normalizeTeamName(clubInput);
-        relevantFixtures = fixtures
-            .map(fixture => {
-                const homeNormalized = normalizeTeamName(fixture.home);
-                const awayNormalized = normalizeTeamName(fixture.away);
-                const isHome = homeNormalized === clubNormalized || 
-                              fixture.home.toLowerCase().includes(clubNormalized) ||
-                              clubNormalized.includes(homeNormalized);
-                const isAway = awayNormalized === clubNormalized ||
-                              fixture.away.toLowerCase().includes(clubNormalized) ||
-                              clubNormalized.includes(awayNormalized);
-                
-                if (isHome || isAway) {
-                    const matchDate = parseFixtureDate(fixture.date);
-                    const fixtureCity = getCity(fixture.home);
-                    return {
-                        ...fixture,
-                        matchDate: matchDate,
-                        city: fixtureCity,
-                        isHome: isHome,
-                        opponent: isHome ? fixture.away : fixture.home
-                    };
+        var clubNormalized = normalizeTeamName(clubInput);
+        relevantFixtures = [];
+        for (var j = 0; j < fixtures.length; j++) {
+            var fixture2 = fixtures[j];
+            var homeNormalized = normalizeTeamName(fixture2.home);
+            var awayNormalized = normalizeTeamName(fixture2.away);
+            var isHome = homeNormalized === clubNormalized || 
+                          fixture2.home.toLowerCase().indexOf(clubNormalized) !== -1 ||
+                          clubNormalized.indexOf(homeNormalized) !== -1;
+            var isAway = awayNormalized === clubNormalized ||
+                          fixture2.away.toLowerCase().indexOf(clubNormalized) !== -1 ||
+                          clubNormalized.indexOf(awayNormalized) !== -1;
+            
+            if (isHome || isAway) {
+                var matchDate2 = parseFixtureDate(fixture2.date);
+                if (matchDate2 && matchDate2 >= dateFilterStart) {
+                    if (!dateFilterEnd || matchDate2 <= dateFilterEnd) {
+                        var fixtureCity2 = getCity(fixture2.home);
+                        var fixtureObj2 = {
+                            date: fixture2.date,
+                            time: fixture2.time,
+                            home: fixture2.home,
+                            away: fixture2.away,
+                            matchDate: matchDate2,
+                            city: fixtureCity2,
+                            isHome: isHome,
+                            opponent: isHome ? fixture2.away : fixture2.home
+                        };
+                        relevantFixtures.push(fixtureObj2);
+                    }
                 }
-                return null;
-            })
-            .filter(f => f !== null)
-            .filter(f => f.matchDate && f.matchDate >= dateFilterStart)
-            .filter(f => !dateFilterEnd || f.matchDate <= dateFilterEnd)
-            .sort((a, b) => a.matchDate - b.matchDate);
+            }
+        }
+        relevantFixtures.sort(function(a, b) {
+            return a.matchDate - b.matchDate;
+        });
         
         if (relevantFixtures.length === 0) {
-            throw new Error(`No matches available for "${clubInput}" in the selected date range.`);
+            throw new Error('No matches available for "' + clubInput + '" in the selected date range.');
         }
         
         if (relevantFixtures.length > 1) {
@@ -440,33 +454,33 @@ async function fetchMatchData(club, city, startDate, endDate) {
         }
     }
     
-    const nextFixture = relevantFixtures[0];
+    var nextFixture = relevantFixtures[0];
     
     if (cityInput && !clubInput && nextFixture.isHome === false) {
         nextFixture.isHome = true;
         nextFixture.opponent = nextFixture.away;
     }
     
-    let hotelInfo = null;
+    var hotelInfo = null;
     if (cityInput && !clubInput) {
-        const homeTeam = nextFixture.home;
+        var homeTeam = nextFixture.home;
         hotelInfo = hotels[homeTeam] || hotels[normalizeTeamName(homeTeam)];
     } else if (nextFixture.isHome) {
-        const homeTeam = nextFixture.home;
-        hotelInfo = hotels[homeTeam] || hotels[normalizeTeamName(homeTeam)];
+        var homeTeam2 = nextFixture.home;
+        hotelInfo = hotels[homeTeam2] || hotels[normalizeTeamName(homeTeam2)];
     } else {
-        const opponent = nextFixture.opponent;
+        var opponent = nextFixture.opponent;
         hotelInfo = hotels[opponent] || hotels[normalizeTeamName(opponent)];
     }
     
-    const formattedDate = nextFixture.matchDate.toLocaleDateString('en-US', {
+    var formattedDate = nextFixture.matchDate.toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     });
     
-    const stadium = getStadium(nextFixture.home);
+    var stadium = getStadium(nextFixture.home);
     
     return {
         homeTeam: nextFixture.home,
@@ -483,113 +497,130 @@ async function fetchMatchData(club, city, startDate, endDate) {
 }
 
 function displayFixtureOptions(matchData) {
-    const resultsSection = document.getElementById('results-section');
-    const resultsContent = document.getElementById('results-content');
+    var resultsSection = document.getElementById('results-section');
+    var resultsContent = document.getElementById('results-content');
     
-    const formattedFixtures = matchData.fixtures.map(fixture => {
-        const formattedDate = fixture.matchDate.toLocaleDateString('en-US', {
+    var formattedFixtures = [];
+    for (var i = 0; i < matchData.fixtures.length; i++) {
+        var fixture = matchData.fixtures[i];
+        var formattedDate = fixture.matchDate.toLocaleDateString('en-US', {
             weekday: 'long',
             year: 'numeric',
             month: 'long',
             day: 'numeric'
         });
-        const stadium = getStadium(fixture.home);
-        return {
-            ...fixture,
+        var stadium = getStadium(fixture.home);
+        formattedFixtures.push({
+            date: fixture.date,
+            time: fixture.time,
+            home: fixture.home,
+            away: fixture.away,
+            matchDate: fixture.matchDate,
+            city: fixture.city,
+            isHome: fixture.isHome,
+            opponent: fixture.opponent,
             formattedDate: formattedDate,
             stadium: stadium
-        };
-    });
-    
-    const isCitySearch = matchData.city !== undefined;
-    const searchTerm = isCitySearch ? matchData.city : matchData.club;
-    const headerText = isCitySearch 
-        ? `Multiple Matches Found in ${searchTerm}`
-        : `Multiple Matches Found for ${searchTerm}`;
-    
-    resultsContent.innerHTML = `
-        <div class="match-card">
-            <div class="match-header">
-                <h3>${headerText}</h3>
-                <p class="match-date">Please select a match:</p>
-            </div>
-            <div class="fixture-options">
-                ${formattedFixtures.map((fixture, index) => `
-                    <div class="fixture-option-card" data-fixture-index="${index}">
-                        <div class="fixture-option-content">
-                            <div>
-                                <p class="fixture-option-title">${fixture.home} vs ${fixture.away}</p>
-                                <p class="fixture-option-date">${fixture.formattedDate}${fixture.time ? ' at ' + fixture.time : ''}</p>
-                                <p class="fixture-option-venue"><strong>Venue:</strong> ${fixture.stadium}</p>
-                            </div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-    
-    document.querySelectorAll('.fixture-option-card').forEach((card, index) => {
-        card.addEventListener('click', function() {
-            document.querySelectorAll('.fixture-option-card').forEach(c => {
-                c.classList.remove('selected');
-            });
-            
-            this.classList.add('selected');
-            
-            const selectedFixture = formattedFixtures[index];
-            const isCitySearch = matchData.city !== undefined;
-            const searchedTerm = isCitySearch ? matchData.city : matchData.club;
-            
-            let hotelInfo = null;
-            let isHomeTeam = true;
-            
-            if (isCitySearch) {
-                const homeTeam = selectedFixture.home;
-                hotelInfo = hotels[homeTeam] || hotels[normalizeTeamName(homeTeam)];
-                isHomeTeam = true;
-            } else {
-                const clubNormalized = normalizeTeamName(searchedTerm);
-                const homeNormalized = normalizeTeamName(selectedFixture.home);
-                
-                isHomeTeam = homeNormalized === clubNormalized || 
-                            selectedFixture.home.toLowerCase().includes(clubNormalized) ||
-                            clubNormalized.includes(homeNormalized);
-                
-                if (isHomeTeam) {
-                    const homeTeam = selectedFixture.home;
-                    hotelInfo = hotels[homeTeam] || hotels[normalizeTeamName(homeTeam)];
-                } else {
-                    const opponent = selectedFixture.home;
-                    hotelInfo = hotels[opponent] || hotels[normalizeTeamName(opponent)];
-                }
-            }
-            
-            const matchDataObj = {
-                homeTeam: selectedFixture.home,
-                awayTeam: selectedFixture.away,
-                date: selectedFixture.formattedDate,
-                time: selectedFixture.time || 'TBA',
-                venue: selectedFixture.stadium,
-                city: selectedFixture.city,
-                competition: 'Premier League',
-                searchedTeam: searchedTerm,
-                isHomeTeam: isHomeTeam,
-                hotel: hotelInfo
-            };
-            
-            displayMatchResults(matchDataObj);
         });
-        
-    });
+    }
+    
+    var isCitySearch = matchData.city !== undefined;
+    var searchTerm = isCitySearch ? matchData.city : matchData.club;
+    var headerText = isCitySearch 
+        ? 'Multiple Matches Found in ' + searchTerm
+        : 'Multiple Matches Found for ' + searchTerm;
+    
+    var html = '<div class="match-card">';
+    html += '<div class="match-header">';
+    html += '<h3>' + headerText + '</h3>';
+    html += '<p class="match-date">Please select a match:</p>';
+    html += '</div>';
+    html += '<div class="fixture-options">';
+    
+    for (var j = 0; j < formattedFixtures.length; j++) {
+        var fixture2 = formattedFixtures[j];
+        html += '<div class="fixture-option-card" data-fixture-index="' + j + '">';
+        html += '<div class="fixture-option-content">';
+        html += '<div>';
+        html += '<p class="fixture-option-title">' + fixture2.home + ' vs ' + fixture2.away + '</p>';
+        html += '<p class="fixture-option-date">' + fixture2.formattedDate;
+        if (fixture2.time) {
+            html += ' at ' + fixture2.time;
+        }
+        html += '</p>';
+        html += '<p class="fixture-option-venue"><strong>Venue:</strong> ' + fixture2.stadium + '</p>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+    }
+    
+    html += '</div>';
+    html += '</div>';
+    
+    resultsContent.innerHTML = html;
+    
+    var cards = document.querySelectorAll('.fixture-option-card');
+    for (var k = 0; k < cards.length; k++) {
+        (function(index) {
+            cards[k].addEventListener('click', function() {
+                for (var m = 0; m < cards.length; m++) {
+                    cards[m].classList.remove('selected');
+                }
+                this.classList.add('selected');
+                
+                var selectedFixture = formattedFixtures[index];
+                var isCitySearch2 = matchData.city !== undefined;
+                var searchedTerm = isCitySearch2 ? matchData.city : matchData.club;
+                
+                var hotelInfo = null;
+                var isHomeTeam = true;
+                
+                if (isCitySearch2) {
+                    var homeTeam = selectedFixture.home;
+                    hotelInfo = hotels[homeTeam] || hotels[normalizeTeamName(homeTeam)];
+                    isHomeTeam = true;
+                } else {
+                    var clubNormalized = normalizeTeamName(searchedTerm);
+                    var homeNormalized = normalizeTeamName(selectedFixture.home);
+                    
+                    isHomeTeam = homeNormalized === clubNormalized || 
+                                selectedFixture.home.toLowerCase().indexOf(clubNormalized) !== -1 ||
+                                clubNormalized.indexOf(homeNormalized) !== -1;
+                    
+                    if (isHomeTeam) {
+                        var homeTeam2 = selectedFixture.home;
+                        hotelInfo = hotels[homeTeam2] || hotels[normalizeTeamName(homeTeam2)];
+                    } else {
+                        var opponent = selectedFixture.home;
+                        hotelInfo = hotels[opponent] || hotels[normalizeTeamName(opponent)];
+                    }
+                }
+                
+                var matchDataObj = {
+                    homeTeam: selectedFixture.home,
+                    awayTeam: selectedFixture.away,
+                    date: selectedFixture.formattedDate,
+                    time: selectedFixture.time || 'TBA',
+                    venue: selectedFixture.stadium,
+                    city: selectedFixture.city,
+                    competition: 'Premier League',
+                    searchedTeam: searchedTerm,
+                    isHomeTeam: isHomeTeam,
+                    hotel: hotelInfo
+                };
+                
+                displayMatchResults(matchDataObj);
+            });
+        })(k);
+    }
     
     resultsSection.style.display = 'block';
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function displayMatchResults(matchData) {
-    const resultsSection = document.getElementById('results-section');
-    const resultsContent = document.getElementById('results-content');
+    var resultsSection = document.getElementById('results-section');
+    var resultsContent = document.getElementById('results-content');
     
     if (!matchData) {
         resultsContent.innerHTML = '<p>No match data found. Please try again.</p>';
@@ -597,124 +628,128 @@ function displayMatchResults(matchData) {
         return;
     }
     
-    const timeDisplay = matchData.time && matchData.time !== 'TBA' 
-        ? ` at ${matchData.time}` 
+    var timeDisplay = matchData.time && matchData.time !== 'TBA' 
+        ? ' at ' + matchData.time 
         : '';
     
-    const hotelOptions = [
+    var hotelOptions = [
         { name: 'Essential Stay', price: 120, image: 'images/Budget_Hotel.jpg' },
         { name: 'Comfort Stay', price: 180, image: 'images/modern hotel room interior.jpg' },
         { name: 'Premium Stay', price: 260, image: 'images/luxury hotel room interior.jpg' }
     ];
     
-    const ticketOptions = [
+    var ticketOptions = [
         { name: 'Standard Seating', price: 75, image: 'images/football stadium upper tier seats.jpg' },
         { name: 'Lower Bowl Seating', price: 140, image: 'images/football stadium lower tier seats.jpg' },
         { name: 'Premium Seating', price: 220, image: 'images/football stadium VIP seats.jpg' }
     ];
     
-    resultsContent.innerHTML = `
-        <div class="match-card">
-            <div class="match-header">
-                <h3>${matchData.competition}</h3>
-                <p class="match-date">${matchData.date}${timeDisplay}</p>
-            </div>
-            <div class="match-teams">
-                <div class="team">
-                    <span class="team-name">${matchData.homeTeam}</span>
-                    <span class="vs">vs</span>
-                    <span class="team-name">${matchData.awayTeam}</span>
-                </div>
-            </div>
-            <div class="match-venue">
-                <p><strong>Venue:</strong> ${matchData.venue}</p>
-            </div>
-            
-            <div class="options-section">
-                <h4>Select Hotel</h4>
-                <div class="options-grid">
-                    ${hotelOptions.map((hotel, index) => `
-                        <div class="option-card" data-type="hotel" data-index="${index}" data-price="${hotel.price}">
-                            <img src="${hotel.image}" alt="${hotel.name}" onerror="this.src='images/Hotel.jpg'">
-                            <p class="option-name">${hotel.name}</p>
-                            <p class="option-price">£${hotel.price}</p>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-            
-            <div class="options-section">
-                <h4>Select Tickets</h4>
-                <div class="options-grid">
-                    ${ticketOptions.map((ticket, index) => `
-                        <div class="option-card" data-type="ticket" data-index="${index}" data-price="${ticket.price}">
-                            <img src="${ticket.image}" alt="${ticket.name}" onerror="this.src='images/Soccer Stadium.jpg'">
-                            <p class="option-name">${ticket.name}</p>
-                            <p class="option-price">£${ticket.price}</p>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-            
-            <div class="total-section">
-                <p>Total: <span id="total-price">£0</span></p>
-            </div>
-        </div>
-    `;
+    var html = '<div class="match-card">';
+    html += '<div class="match-header">';
+    html += '<h3>' + matchData.competition + '</h3>';
+    html += '<p class="match-date">' + matchData.date + timeDisplay + '</p>';
+    html += '</div>';
+    html += '<div class="match-teams">';
+    html += '<div class="team">';
+    html += '<span class="team-name">' + matchData.homeTeam + '</span>';
+    html += '<span class="vs">vs</span>';
+    html += '<span class="team-name">' + matchData.awayTeam + '</span>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="match-venue">';
+    html += '<p><strong>Venue:</strong> ' + matchData.venue + '</p>';
+    html += '</div>';
     
-    let selectedHotel = null;
-    let selectedTicket = null;
+    html += '<div class="options-section">';
+    html += '<h4>Select Hotel</h4>';
+    html += '<div class="options-grid">';
+    for (var i = 0; i < hotelOptions.length; i++) {
+        html += '<div class="option-card" data-type="hotel" data-index="' + i + '" data-price="' + hotelOptions[i].price + '">';
+        html += '<img src="' + hotelOptions[i].image + '" alt="' + hotelOptions[i].name + '" onerror="this.src=\'images/Hotel.jpg\'">';
+        html += '<p class="option-name">' + hotelOptions[i].name + '</p>';
+        html += '<p class="option-price">£' + hotelOptions[i].price + '</p>';
+        html += '</div>';
+    }
+    html += '</div>';
+    html += '</div>';
+    
+    html += '<div class="options-section">';
+    html += '<h4>Select Tickets</h4>';
+    html += '<div class="options-grid">';
+    for (var j = 0; j < ticketOptions.length; j++) {
+        html += '<div class="option-card" data-type="ticket" data-index="' + j + '" data-price="' + ticketOptions[j].price + '">';
+        html += '<img src="' + ticketOptions[j].image + '" alt="' + ticketOptions[j].name + '" onerror="this.src=\'images/Soccer Stadium.jpg\'">';
+        html += '<p class="option-name">' + ticketOptions[j].name + '</p>';
+        html += '<p class="option-price">£' + ticketOptions[j].price + '</p>';
+        html += '</div>';
+    }
+    html += '</div>';
+    html += '</div>';
+    
+    html += '<div class="total-section">';
+    html += '<p>Total: <span id="total-price">£0</span></p>';
+    html += '</div>';
+    html += '</div>';
+    
+    resultsContent.innerHTML = html;
+    
+    var selectedHotel = null;
+    var selectedTicket = null;
     
     function updateTotal() {
-        const totalPrice = (selectedHotel || 0) + (selectedTicket || 0);
-        const totalElement = document.getElementById('total-price');
+        var totalPrice = (selectedHotel || 0) + (selectedTicket || 0);
+        var totalElement = document.getElementById('total-price');
         if (totalElement) {
-            totalElement.textContent = `£${totalPrice}`;
+            totalElement.textContent = '£' + totalPrice;
         }
     }
     
-    document.querySelectorAll('.option-card[data-type="hotel"]').forEach(card => {
-        card.addEventListener('click', function() {
-            document.querySelectorAll('.option-card[data-type="hotel"]').forEach(c => {
-                c.classList.remove('selected');
-            });
+    var hotelCards = document.querySelectorAll('.option-card[data-type="hotel"]');
+    for (var k = 0; k < hotelCards.length; k++) {
+        hotelCards[k].addEventListener('click', function() {
+            var allHotelCards = document.querySelectorAll('.option-card[data-type="hotel"]');
+            for (var m = 0; m < allHotelCards.length; m++) {
+                allHotelCards[m].classList.remove('selected');
+            }
             this.classList.add('selected');
             selectedHotel = parseInt(this.getAttribute('data-price'));
             updateTotal();
         });
-    });
+    }
     
-    document.querySelectorAll('.option-card[data-type="ticket"]').forEach(card => {
-        card.addEventListener('click', function() {
-            document.querySelectorAll('.option-card[data-type="ticket"]').forEach(c => {
-                c.classList.remove('selected');
-            });
+    var ticketCards = document.querySelectorAll('.option-card[data-type="ticket"]');
+    for (var n = 0; n < ticketCards.length; n++) {
+        ticketCards[n].addEventListener('click', function() {
+            var allTicketCards = document.querySelectorAll('.option-card[data-type="ticket"]');
+            for (var p = 0; p < allTicketCards.length; p++) {
+                allTicketCards[p].classList.remove('selected');
+            }
             this.classList.add('selected');
             selectedTicket = parseInt(this.getAttribute('data-price'));
             updateTotal();
         });
-    });
+    }
     
     resultsSection.style.display = 'block';
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const searchButton = document.getElementById('search-button');
+    var searchButton = document.getElementById('search-button');
     
-    searchButton.addEventListener('click', async function() {
-        const clubValue = document.getElementById('club-input').value.trim();
-        const cityValue = document.getElementById('city-input').value.trim();
-        const startDateValue = document.getElementById('start-date-input').value;
-        const endDateValue = document.getElementById('end-date-input').value;
+    searchButton.addEventListener('click', function() {
+        var clubValue = document.getElementById('club-input').value.trim();
+        var cityValue = document.getElementById('city-input').value.trim();
+        var startDateValue = document.getElementById('start-date-input').value;
+        var endDateValue = document.getElementById('end-date-input').value;
         
         if (startDateValue && endDateValue) {
-            const startDate = new Date(startDateValue);
-            const endDate = new Date(endDateValue);
+            var startDate = new Date(startDateValue);
+            var endDate = new Date(endDateValue);
             if (startDate > endDate) {
-                const resultsSection = document.getElementById('results-section');
-                const resultsContent = document.getElementById('results-content');
-                resultsContent.innerHTML = `<p style="color: #d32f2f; text-align: center; padding: 20px;">Start date must be before or equal to end date.</p>`;
+                var resultsSection = document.getElementById('results-section');
+                var resultsContent = document.getElementById('results-content');
+                resultsContent.innerHTML = '<p style="color: #d32f2f; text-align: center; padding: 20px;">Start date must be before or equal to end date.</p>';
                 resultsSection.style.display = 'block';
                 return;
             }
@@ -725,13 +760,13 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Start Date:', startDateValue);
         console.log('End Date:', endDateValue);
         
-        const resultsSection = document.getElementById('results-section');
-        const resultsContent = document.getElementById('results-content');
-        resultsContent.innerHTML = '<p>Loading match data...</p>';
-        resultsSection.style.display = 'block';
+        var resultsSection2 = document.getElementById('results-section');
+        var resultsContent2 = document.getElementById('results-content');
+        resultsContent2.innerHTML = '<p>Loading match data...</p>';
+        resultsSection2.style.display = 'block';
         
         try {
-            const matchData = await fetchMatchData(clubValue, cityValue, startDateValue, endDateValue);
+            var matchData = fetchMatchData(clubValue, cityValue, startDateValue, endDateValue);
             
             if (matchData.multipleMatches) {
                 displayFixtureOptions(matchData);
@@ -742,7 +777,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Match Data:', matchData);
         } catch (error) {
             console.error('Error fetching match data:', error);
-            resultsContent.innerHTML = `<p style="color: #d32f2f; text-align: center; padding: 20px;">${error.message || 'Error loading match data. Please try again later.'}</p>`;
+            var resultsContent3 = document.getElementById('results-content');
+            resultsContent3.innerHTML = '<p style="color: #d32f2f; text-align: center; padding: 20px;">' + (error.message || 'Error loading match data. Please try again later.') + '</p>';
         }
     });
 });

@@ -1,58 +1,38 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-  background: linear-gradient(to bottom, #f8f9fa 0%, #f5f6f8 100%);
-  color: #1a1a1a;
-  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
 }
 
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 34px;
-  background: white;
-  border-bottom: 2px solid #e8e8e8;
-  box-shadow: 0px 2px 8px rgba(0,0,0,0.04);
+  padding: 20px 30px;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
 }
 
 .logo {
   font-size: 20px;
   font-weight: bold;
-  color: #1a1a1a;
-  letter-spacing: -0.5px;
-}
-
-.auth-buttons button {
-  margin-left: 10px;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  cursor: pointer;
-  border: none;
+  color: #333;
 }
 
 .primary-btn {
-  background: #1a1a1a;
+  background-color: #333;
   color: white;
-  transition: all 0.3s ease;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
 }
 
 .primary-btn:hover {
-  background: #333;
-  transform: translateY(-1px);
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
-}
-
-.secondary-btn {
-  background: white;
-  border: 1px solid #ccc;
-  transition: all 0.3s ease;
-}
-
-.secondary-btn:hover {
-  background: #f8f9fa;
-  border-color: #999;
+  background-color: #555;
 }
 
 .hero {
@@ -61,15 +41,13 @@ header {
 }
 
 .hero h1 {
-  font-size: 32px;
-  margin-bottom: 12px;
-  color: #1a1a1a;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  font-size: 30px;
+  margin-bottom: 10px;
+  color: #333;
 }
 
 .hero p {
-  margin-bottom: 35px;
+  margin-bottom: 30px;
   color: #666;
   font-size: 16px;
 }
@@ -82,21 +60,16 @@ header {
 }
 
 .search-box {
-  background: white;
-  padding: 22px;
+  background-color: white;
+  padding: 20px;
   width: 330px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
-  transition: box-shadow 0.3s ease;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   box-sizing: border-box;
 }
 
-.search-box:hover {
-  box-shadow: 0px 6px 16px rgba(0,0,0,0.12);
-}
-
 .search-box label {
-  font-weight: 600;
+  font-weight: bold;
   display: block;
   margin-bottom: 8px;
   color: #333;
@@ -105,19 +78,17 @@ header {
 
 .search-box input {
   width: 100%;
-  padding: 12px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   font-size: 14px;
-  transition: all 0.3s ease;
   box-sizing: border-box;
   display: block;
 }
 
 .search-box input:focus {
   outline: none;
-  border-color: #1a1a1a;
-  box-shadow: 0px 0px 0px 3px rgba(26, 26, 26, 0.1);
+  border-color: #333;
 }
 
 .date-range-container {
@@ -141,35 +112,32 @@ header {
 }
 
 .results-section h2 {
-  font-size: 28px;
+  font-size: 26px;
   margin-bottom: 30px;
   text-align: center;
-  font-weight: 600;
-  color: #1a1a1a;
+  color: #333;
 }
 
 .match-card {
-  background: white;
-  border-radius: 16px;
+  background-color: white;
+  border-radius: 10px;
   padding: 40px;
-  box-shadow: 0px 4px 24px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   max-width: 100%;
   margin: 0 auto;
-  border: 1px solid #f0f0f0;
 }
 
 .match-header {
   text-align: center;
   margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 2px solid #e8e8e8;
+  border-bottom: 1px solid #eee;
 }
 
 .match-header h3 {
   margin: 0 0 10px 0;
   font-size: 20px;
-  font-weight: 600;
-  color: #1a1a1a;
+  color: #333;
 }
 
 .match-date {
@@ -191,16 +159,14 @@ header {
 }
 
 .team-name {
-  font-size: 26px;
-  font-weight: 700;
-  color: #1a1a1a;
-  letter-spacing: -0.3px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
 }
 
 .vs {
   font-size: 18px;
   color: #888;
-  font-weight: 500;
   padding: 0 8px;
 }
 
@@ -208,7 +174,7 @@ header {
   text-align: center;
   margin-top: 30px;
   padding-top: 20px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid #eee;
 }
 
 .match-venue p {
@@ -220,58 +186,53 @@ header {
 .options-section {
   margin-top: 50px;
   padding-top: 30px;
-  border-top: 2px solid #f0f0f0;
+  border-top: 2px solid #eee;
 }
 
 .options-section h4 {
   margin-bottom: 25px;
-  font-size: 22px;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-size: 20px;
+  color: #333;
   text-align: center;
 }
 
 .options-grid {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: stretch;
 }
 
 .option-card {
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
+  background-color: white;
+  border: 2px solid #ddd;
+  border-radius: 8px;
   padding: 20px;
   cursor: pointer;
-  transition: all 0.3s ease;
   width: 220px;
   min-height: 280px;
   text-align: center;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .option-card:hover {
   border-color: #999;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.12);
-  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
 }
 
 .option-card.selected {
-  border: 3px solid #1a1a1a;
-  background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
-  box-shadow: 0px 6px 20px rgba(0,0,0,0.18);
-  transform: translateY(-3px);
+  border: 3px solid #333;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .option-card img {
   width: 100%;
   height: 150px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 5px;
   margin-bottom: 15px;
 }
 
@@ -281,39 +242,38 @@ header {
 
 .option-card .option-name {
   margin: 12px 0 8px 0;
-  font-weight: 600;
+  font-weight: bold;
   font-size: 15px;
-  color: #1a1a1a;
+  color: #333;
 }
 
 .option-card .option-price {
   margin-top: auto;
   font-size: 20px;
-  font-weight: 700;
+  font-weight: bold;
   padding-top: 10px;
-  color: #2563eb;
+  color: #0066cc;
 }
 
 .total-section {
   margin-top: 50px;
-  padding: 35px;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  border-radius: 12px;
+  padding: 30px;
+  background-color: #333;
+  border-radius: 8px;
   text-align: center;
-  box-shadow: 0px 4px 16px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .total-section p {
   margin: 0;
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: bold;
   color: white;
 }
 
 #total-price {
-  color: #60a5fa;
-  font-size: 32px;
-  font-weight: 800;
+  color: #66ccff;
+  font-size: 28px;
 }
 
 .features-section {
@@ -324,10 +284,9 @@ header {
 }
 
 .features-section h2 {
-  font-size: 26px;
+  font-size: 24px;
   margin-bottom: 30px;
-  font-weight: 600;
-  color: #1a1a1a;
+  color: #333;
   text-align: center;
 }
 
@@ -339,17 +298,15 @@ header {
 
 .feature-card {
   width: 320px;
-  background: white;
-  border-radius: 12px;
+  background-color: white;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border: 1px solid #eee;
 }
 
 .feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 .feature-card img {
@@ -381,23 +338,22 @@ header {
 }
 
 .fixture-option-card {
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
+  background-color: white;
+  border: 2px solid #ddd;
+  border-radius: 8px;
   padding: 20px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0px 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .fixture-option-card:hover {
   border-color: #999;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
 }
 
 .fixture-option-card.selected {
-  border: 3px solid #1a1a1a;
-  background: #f8f9fa;
+  border: 3px solid #333;
+  background-color: #f9f9f9;
 }
 
 .fixture-option-content {
@@ -409,7 +365,7 @@ header {
 .fixture-option-title {
   margin: 0 0 8px 0;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: bold;
 }
 
 .fixture-option-date {
